@@ -1,0 +1,169 @@
+GPUS: '0'
+MODEL: multiview_mpl
+DATA_DIR: ''
+OUTPUT_DIR: '/globalscratch/users/a/b/abolfazl/MPL_files/output'
+LOG_DIR: '/globalscratch/users/a/b/abolfazl/MPL_files/log'
+WORKERS: 4
+PRINT_FREQ: 100
+MPJPE_PER_KEYPOINT: true
+WANDB: true
+DOWNSAMPLE: 1
+SEED: 0
+VALIDATE_ON_TWO_DATASETS: true
+
+DATASET:
+  TRAIN_DATASET: multiview_amass_h36m_panoptic_mpl
+  TEST_DATASET: multiview_h36m_mpl
+  ROOT_2DATSET: '/globalscratch/ucl/elen/abolfazl/amass'
+  AMASS_DATASET_TYPE: 'all_with_mmpose_h36m_actual_size_mmpose_hrnet_amass_mmpose_joints_h36m_calibs_9_11_no_fit_rotated_not_triangulated'
+  ROOT: '/globalscratch/users/a/b/abolfazl/Human36m/H36M-Toolbox'
+  TRAIN_USE_H36M_OLD_DATASETS: false
+  TEST_USE_H36M_OLD_DATASETS: false
+  TRAIN_H36M_DATASET_NAME: annot_filtered_5_64
+  TEST_H36M_DATASET_NAME: annot_filtered_5_64
+  TRAIN_MMPOSE_TYPE: mmpose_hrnet_coco
+  TEST_MMPOSE_TYPE: mmpose_hrnet_coco
+  FILTER_GROUPINGS: false
+  TRAIN_SUBSET: train
+  TEST_SUBSET: validation
+  DATA_FORMAT: 'jpg'
+  ROT_FACTOR: 0
+  SCALE_FACTOR: 0
+  WITH_DAMAGE: false
+  APPLY_NOISE: false
+  NOISE_LEVEL: 0
+  TRAIN_USE_AMASS_OLD_DATASETS: false
+  TEST_USE_AMASS_OLD_DATASETS: false
+  USE_MMPOSE_TRAIN: true 
+  USE_MMPOSE_VAL: false  
+  TARGET_NORMALIZED_3D: false
+  INPUTS_NORMALIZED: true
+  OUTPUT_IN_METER: true
+  NO_AUGMENTATION: true
+  CLIP_JOINTS: true
+  TRAIN_VIEWS: [1, 2, 3, 4]
+  TEST_VIEWS: [1, 2, 3, 4]
+  ROOM_MIN_X: -1
+  ROOM_MAX_X: 1
+  ROOM_MIN_Y: -1.5
+  ROOM_MAX_Y: 2
+  AMASS_DATA_NO_AXIS_SWAP: true
+  CENTERALIZE_ROOT_FIRST: false
+  FLIP_3D: false
+  ROTATE_3D: false
+  NO_AUGMENTATION_3D: true
+  USE_GRID: false
+  BUG_TEST_3D_EMB: false
+  AMASS_VAL_LOCATED: false
+  NORMALIZE_CAMERAS: true
+  USE_T: true
+  TRAIN_H36M_CALIB_ACTORS: [9, 11]
+  TEST_H36M_CALIB_ACTORS: [9, 11]
+
+
+NETWORK:
+  INIT_WEIGHTS: true
+  NAME: multiview_mpl
+  NUM_JOINTS: 17
+  PRETRAINED: ''
+  TARGET_TYPE: gaussian
+  TRANSFORMER_DEPTH: 12
+  TRANSFORMER_HEADS: 8
+  TRANSFORMER_MLP_RATIO: 3
+  TRANSFORMER_DROP_RATE: 0
+  TRANSFORMER_ATTN_DROP_RATE: 0
+  TRANSFORMER_DROP_PATH_RATE: 0.1
+  TRANSFORMER_CONFIDENCE_INPUT_AS_THIRD: true
+  TRANSFORMER_INPUT_RAYS_AS_TOKEN: true
+  TRANSFORMER_MULTIPLE_SPATIAL_BLOCKS: true
+  POSE_3D_EMB_LEARNABLE: true
+  TRANSFORMER_ADD_3D_POS_ENCODING_TO_RAYS: true
+  TRANSFORMER_CONFIDENCE_IN_FPT: false
+  POS_EMBEDDING_TYPE: 'sine-full'
+  INIT: true
+  DIM: 32 # 4*4*3
+  PATCH_SIZE:
+  - 4
+  - 4
+  IMAGE_SIZE:
+  - 1000
+  - 1000
+  HEATMAP_SIZE:
+  - 64
+  - 64
+  SIGMA: 2
+
+# NETWORK:
+#   PRETRAINED: 'models/pytorch/coco/tp_r_256x192_enc3_d256_h1024_mh8.pth'
+#   TARGET_TYPE: gaussian
+#   FUSION: true
+#   POS_EMB_3D: geometry
+#   GAMMA: 10
+#   DIM_MODEL: 256
+#   DIM_FEEDFORWARD: 1024
+#   ENCODER_LAYERS: 3
+#   N_HEAD: 8
+#   POS_EMBEDDING: 'sine'
+#   ATTENTION_ACTIVATION: 'relu'
+
+#   HEATMAP_SIZE:
+#   - 64
+#   - 64
+#   IMAGE_SIZE:
+#   - 256
+#   - 256
+#   NUM_JOINTS: 20
+#   SIGMA: 2
+#   EXTRA:
+#     NUM_LAYERS: 50
+#     DECONV_WITH_BIAS: false
+#     FINAL_CONV_KERNEL: 1
+
+LOSS:
+  # TYPE: 'JointsL1Loss'
+  USE_TARGET_WEIGHT: true
+TRAIN:
+  BATCH_SIZE: 32
+  SHUFFLE: true
+  BEGIN_EPOCH: 0
+  END_EPOCH: 20
+  RESUME: true
+  OPTIMIZER: adam
+  LR: 0.0001
+  LR_FACTOR: 0.1
+  LR_STEP:
+  - 10
+  - 15
+  WD: 0.0001
+  GAMMA1: 0.99
+  GAMMA2: 0.0
+  MOMENTUM: 0.9
+  NESTEROV: false
+TEST:
+  BATCH_SIZE: 256
+  BBOX_FILE: ''
+  BBOX_THRE: 1.0
+  DETECTOR: fpn_dcn
+  DETECTOR_DIR: ''
+  IMAGE_THRE: 0.1
+  IN_VIS_THRE: 0.0
+  MATCH_IOU_THRE: 0.3
+  MODEL_FILE: ''
+  NMS_THRE: 0.6
+  OKS_THRE: 0.5
+  POST_PROCESS: true
+  USE_GT_BBOX: true
+PICT_STRUCT:
+  PAIRWISE_FILE: 'data/pict/pairwise.pkl'
+DEBUG:
+  # DEBUG: true
+  # SAVE_BATCH_IMAGES_GT: true
+  # SAVE_BATCH_IMAGES_PRED: true
+  # SAVE_HEATMAPS_GT: true
+  # SAVE_HEATMAPS_PRED: true
+  DEBUG: false
+  SAVE_BATCH_IMAGES_GT: false
+  SAVE_BATCH_IMAGES_PRED: false
+  SAVE_HEATMAPS_GT: false
+  SAVE_HEATMAPS_PRED: false
+

@@ -1,0 +1,139 @@
+DATASET:
+  AMASS_DATASET_TYPE: all_with_mmpose_h36m_actual_size_mmpose_hrnet_amass_mmpose_joints_h36m_calibs_9_11_no_fit_rotated_not_triangulated
+  AMASS_DATA_NO_AXIS_SWAP: true
+  AMASS_VAL_LOCATED: false
+  APPLY_NOISE: false
+  BUG_TEST_3D_EMB: false
+  CENTERALIZE_ROOT_FIRST: false
+  CLIP_JOINTS: true
+  DATASET_TYPE: annot_filtered_5_64
+  DATA_FORMAT: jpg
+  FILTER_GROUPINGS: false
+  FLIP_3D: false
+  INPUTS_NORMALIZED: true
+  NOISE_LEVEL: 0
+  NORMALIZE_CAMERAS: true
+  NO_AUGMENTATION: true
+  NO_AUGMENTATION_3D: true
+  OUTPUT_IN_METER: true
+  ROOM_MAX_X: 1
+  ROOM_MAX_Y: 2
+  ROOM_MIN_X: -1
+  ROOM_MIN_Y: -1.5
+  ROOT: /globalscratch/users/a/b/abolfazl/Human36m/H36M-Toolbox
+  ROOT_2DATSET: /globalscratch/ucl/elen/abolfazl/amass
+  ROTATE_3D: false
+  ROT_FACTOR: 0
+  SCALE_FACTOR: 0
+  TARGET_NORMALIZED_3D: false
+  TEST_DATASET: multiview_h36m_mpl
+  TEST_H36M_CALIB_ACTORS:
+  - 9
+  - 11
+  TEST_MMPOSE_TYPE: mmpose_hrnet_coco
+  TEST_SUBSET: validation
+  TEST_USE_AMASS_OLD_DATASETS: false
+  TEST_USE_H36M_OLD_DATASETS: false
+  TEST_VIEWS:
+  - 1
+  - 3
+  TRAIN_DATASET: multiview_amass_h36m_panoptic_mpl
+  TRAIN_H36M_CALIB_ACTORS:
+  - 9
+  - 11
+  TRAIN_MMPOSE_TYPE: mmpose_hrnet_coco
+  TRAIN_SUBSET: train
+  TRAIN_USE_AMASS_OLD_DATASETS: false
+  TRAIN_USE_H36M_OLD_DATASETS: false
+  TRAIN_VIEWS:
+  - 1
+  - 3
+  USE_GRID: false
+  USE_MMPOSE_TRAIN: true
+  USE_MMPOSE_VAL: false
+  USE_T: true
+  WITH_DAMAGE: false
+DATA_DIR: ''
+DEBUG:
+  DEBUG: false
+  SAVE_BATCH_IMAGES_GT: false
+  SAVE_BATCH_IMAGES_PRED: false
+  SAVE_HEATMAPS_GT: false
+  SAVE_HEATMAPS_PRED: false
+DOWNSAMPLE: 1
+GPUS: '0'
+LOG_DIR: /globalscratch/users/a/b/abolfazl/PPT_files/log
+LOSS:
+  USE_TARGET_WEIGHT: true
+MODEL: multiview_mpl
+MPJPE_PER_KEYPOINT: true
+NETWORK:
+  DIM: 32
+  HEATMAP_SIZE:
+  - 64
+  - 64
+  IMAGE_SIZE:
+  - 1000
+  - 1000
+  INIT: true
+  INIT_WEIGHTS: true
+  NAME: multiview_mpl
+  NUM_JOINTS: 17
+  PATCH_SIZE:
+  - 4
+  - 4
+  TRANSFORMER_ADD_3D_POS_ENCODING_TO_RAYS: false
+  TRANSFORMER_ATTN_DROP_RATE: 0
+  TRANSFORMER_CONFIDENCE_INPUT_AS_THIRD: false
+  TRANSFORMER_CONFIDENCE_IN_FPT: false
+  TRANSFORMER_DROP_PATH_RATE: 0.1
+  TRANSFORMER_DROP_RATE: 0
+  TRANSFORMER_INPUT_RAYS_AS_TOKEN: false
+  TRANSFORMER_MULTIPLE_SPATIAL_BLOCKS: false
+  POSE_3D_EMB_LEARNABLE: true
+  POS_EMBEDDING_TYPE: sine-full
+  PRETRAINED: ''
+  SIGMA: 2
+  TARGET_TYPE: gaussian
+  TRANSFORMER_DEPTH: 12
+  TRANSFORMER_HEADS: 8
+  TRANSFORMER_MLP_RATIO: 3
+OUTPUT_DIR: /globalscratch/users/a/b/abolfazl/PPT_files/output
+PICT_STRUCT:
+  PAIRWISE_FILE: data/pict/pairwise.pkl
+PRINT_FREQ: 100
+SEED: 0
+TEST:
+  BATCH_SIZE: 256
+  BBOX_FILE: ''
+  BBOX_THRE: 1.0
+  DETECTOR: fpn_dcn
+  DETECTOR_DIR: ''
+  IMAGE_THRE: 0.1
+  IN_VIS_THRE: 0.0
+  MATCH_IOU_THRE: 0.3
+  MODEL_FILE: ''
+  NMS_THRE: 0.6
+  OKS_THRE: 0.5
+  POST_PROCESS: true
+  USE_GT_BBOX: true
+TRAIN:
+  BATCH_SIZE: 32
+  BEGIN_EPOCH: 0
+  END_EPOCH: 20
+  GAMMA1: 0.99
+  GAMMA2: 0.0
+  LR: 0.0001
+  LR_FACTOR: 0.1
+  LR_STEP:
+  - 10
+  - 15
+  MOMENTUM: 0.9
+  NESTEROV: false
+  OPTIMIZER: adam
+  RESUME: true
+  SHUFFLE: true
+  WD: 0.0001
+VALIDATE_ON_TWO_DATASETS: true
+WANDB: true
+WORKERS: 4
