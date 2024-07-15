@@ -1,0 +1,14 @@
+*.out
+
+
+__pycache__/
+
+log/
+
+.ipynb_checkpoints/
+
+
+test*.png
+test_imgs/
+
+plotly_figure_fig*.html
