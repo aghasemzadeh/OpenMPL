@@ -2,7 +2,7 @@
 
 ## Installation
 
-To get started with [Project Name], follow these steps:
+To get started with OpenMPL, follow these steps:
 
 ### Steps
 
@@ -50,6 +50,10 @@ To get started with [Project Name], follow these steps:
     cd MPL/data
     sh preprocess_h36m.sh
     ```
+
+    #### AMASS
+
+    For running MHP (generating 3D dataset for MPL), you need to download the amass dataset. Please follow [AMASS](https://amass.is.tue.mpg.de/index.html) for downloading the pose SMPL data.
 
 
     You can change your prefered configurations in the sh file

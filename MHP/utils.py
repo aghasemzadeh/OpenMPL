@@ -50,12 +50,13 @@ def world_to_cam(point_world, R, T):
     return point_cam
 
 # load camera calib info
-def load_all_cameras_h36m(calib_file, actors):
+def load_all_cameras_h36m(calib_path, actors):
     """
     loads all cameras from the calibration file and returns a dictionary
     containing the camera parameters for each camera
     each item has a list showing different camera setups (actors)
     """
+    calib_file = os.path.join(calib_path, 'camera_data.pkl')
     with open(calib_file, 'rb') as f:
         camera_data = pickle.load(f)
     cams = range(1, 5)
@@ -105,7 +106,7 @@ def load_all_cameras_cmu(calib_root, cmu_calibs):
     cams = range(31)
     cameras_all_calibs = {cam_id: [] for cam_id in cams}
     for cam_setup in cmu_calibs:
-        calib_file = osp.join(calib_root, 'calibration_{}.json'.format(cam_setup))
+        calib_file = osp.join(calib_root, cam_setup, 'calibration_{}.json'.format(cam_setup))
         with open(calib_file, 'r') as f:
             calibration_cat = json.load(f)
         cameras = {cam['node']:cam for cam in calibration_cat['cameras'] if cam['type']=='hd'}

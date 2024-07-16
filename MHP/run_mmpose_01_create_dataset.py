@@ -3,8 +3,6 @@ from os import path as osp
 import numpy as np
 import torch
 from tqdm import tqdm
-import pickle
-import trimesh
 import argparse
 import glob 
 from body_visualizer.tools.vis_tools import colors, imagearray2file
@@ -15,12 +13,8 @@ from human_body_prior.tools.omni_tools import copy2cpu as c2c
 from human_body_prior.body_model.body_model import BodyModel
 from amass.data.prepare_data import prepare_amass
 from torch.utils.data import Dataset
-from torch.utils.data import DataLoader
-from mmpose.apis import MMPoseInferencer
 from utils import *
 
-# support_dir = '/data/Git_Repo/TransMoCap/support_data'
-support_dir = '/globalscratch/users/a/b/abolfazl/amass_data/support_data'
 
 # Choose the device to run the body model on.
 comp_device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -70,7 +64,8 @@ def parse_args():
     parser.add_argument('--exp', default='amass', type=str, help='Experiment name')
     parser.add_argument('--n-splits', default=100, type=int, help='Number of splits')
     parser.add_argument('--operation-on', default=['train', 'validation'], nargs='+', type=str, help='Operations on')
-    
+    parser.add_argument('--work-dir', default='./prepared_data/', type=str, help='Work directory')
+    parser.add_argument('--amass-data-dir', default='../../amass_data_poses', type=str, help='PATH_TO_DOWNLOADED_NPZFILES/*/*_poses.npz')
 
     return parser.parse_args()
 
@@ -166,17 +161,10 @@ def main():
 
     msg = ''' Initial use of standard AMASS dataset preparation pipeline '''
 
-    # amass_dir =  '/data/amass_data_poses/' #'PATH_TO_DOWNLOADED_NPZFILES/*/*_poses.npz'
-    amass_dir =  '/globalscratch/users/a/b/abolfazl/amass_data_poses' #'PATH_TO_DOWNLOADED_NPZFILES/*/*_poses.npz'
+    # amass_dir =  '/globalscratch/users/a/b/abolfazl/amass_data_poses' #'PATH_TO_DOWNLOADED_NPZFILES/*/*_poses.npz'
+    amass_dir = args.amass_data_dir
     
-    if args.regressor == 'h36m':
-        J_regressor = amass_dir + '/J_regressor_h36m.npy'
-    elif args.regressor == 'coco':
-        J_regressor = amass_dir + '/J_regressor_coco.npy'
-    else:
-        raise ValueError('Unknown regressor: {}'.format(args.regressor))
-    # work_dir = '/data/Git_Repo/amass/support_data/prepared_data/{}/'.format(expr_code)
-    work_dir = '/globalscratch/users/a/b/abolfazl/amass_data/support_data/prepared_data/{}/'.format(expr_code)
+    work_dir = os.path.join(args.work_dir, expr_code)
 
     logger = log2file(makepath(work_dir, '%s.log' % (expr_code), isfile=True))
     logger('[%s] AMASS Data Preparation Began.'%expr_code)

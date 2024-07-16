@@ -7,20 +7,10 @@ import pickle
 import trimesh
 import argparse
 import glob 
-from body_visualizer.tools.vis_tools import colors, imagearray2file
-from body_visualizer.mesh.mesh_viewer import MeshViewer
-from body_visualizer.tools.vis_tools import show_image
 from human_body_prior.tools.omni_tools import log2file, makepath
-from human_body_prior.tools.omni_tools import copy2cpu as c2c
-from human_body_prior.body_model.body_model import BodyModel
-from amass.data.prepare_data import prepare_amass
 from torch.utils.data import Dataset
-from torch.utils.data import DataLoader
-from mmpose.apis import MMPoseInferencer
 from utils import *
 
-# support_dir = '/data/Git_Repo/TransMoCap/support_data'
-support_dir = '/globalscratch/users/a/b/abolfazl/amass_data/support_data'
 
 # Choose the device to run the body model on.
 comp_device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -66,28 +56,12 @@ amass_splits = {
 # get amass train split from input arguments
 def parse_args():
     parser = argparse.ArgumentParser(description='Train keypoints network')
-    # parser.add_argument('--train-datasets', default=None, nargs='+', type=str, help='Train datasets')
     parser.add_argument('--exp', default='amass', type=str, help='Experiment name')
     parser.add_argument('--extra-name', default='', type=str, help='Extra name for the experiment')
     parser.add_argument('--n-splits', default=100, type=int, help='Number of splits')
-    # parser.add_argument('--use-cams-from', default='h36m', type=str, help='Use cameras from',
-    #                     choices=['h36m', 'cmu', 'both'])
-    # parser.add_argument('--calib-file-h36m', default=None, type=str, help='Camera calibration file')
-    # parser.add_argument('--calib-root-cmu', default=None, type=str, help='Camera calibration file')
-    # parser.add_argument('--actors-h36m', default=[1, 5, 6, 7, 8, 9, 11], nargs='+', type=int, help='Actors to use')
-    # parser.add_argument('--calibs-cmu', default=['171204_pose5', '171204_pose6'], nargs='+', type=str, help='Calibrations to use')
-    # parser.add_argument('--views-cmu', default=[3, 6, 12, 13, 23], nargs='+', type=int, help='Views to use')
-    # parser.add_argument('--room-size', default=[-1.0, 1.0, -1.0, 1.0], nargs='+', type=float, help='Room size [min_x, max_x, min_y, max_y]')
     parser.add_argument('--operation-on', default=['train', 'validation'], nargs='+', type=str, help='Operations on')
-    # parser.add_argument('--image-width', default=1000, type=int, help='Image width')
-    # parser.add_argument('--image-height', default=1000, type=int, help='Image height')
-    # parser.add_argument('--apply-rotation', default=False, action='store_true', help='Apply rotation')
-    # parser.add_argument('--apply-joint-clip', default=False, action='store_true', help='Apply joint clip')
-    # parser.add_argument('--n-frames', default=-1, type=int, help='Number of frames to use')
-    # parser.add_argument('--fit-mmpose-to-amass', default=False, action='store_true', help='Fit skeleton to AMASS')
-    # parser.add_argument('--fit-using-most-aligned', default=False, action='store_true', help='Fit using all joints or only the most aligned ones')
-    # parser.add_argument('--regressor', default='h36m', type=str, help='Regressor to use', choices=['h36m', 'coco'])
-
+    parser.add_argument('--work-dir', default='./prepared_data/', type=str, help='Work directory')
+    
     return parser.parse_args()
 
 
@@ -182,17 +156,7 @@ def main():
 
     msg = ''' Initial use of standard AMASS dataset preparation pipeline '''
 
-    # amass_dir =  '/data/amass_data_poses/' #'PATH_TO_DOWNLOADED_NPZFILES/*/*_poses.npz'
-    amass_dir =  '/globalscratch/users/a/b/abolfazl/amass_data_poses' #'PATH_TO_DOWNLOADED_NPZFILES/*/*_poses.npz'
-    
-    # if args.regressor == 'h36m':
-    #     J_regressor = amass_dir + '/J_regressor_h36m.npy'
-    # elif args.regressor == 'coco':
-    #     J_regressor = amass_dir + '/J_regressor_coco.npy'
-    # else:
-    #     raise ValueError('Unknown regressor: {}'.format(args.regressor))
-    # work_dir = '/data/Git_Repo/amass/support_data/prepared_data/{}/'.format(expr_code)
-    work_dir = '/globalscratch/users/a/b/abolfazl/amass_data/support_data/prepared_data/{}/'.format(expr_code)
+    work_dir = os.path.join(args.work_dir, expr_code)
 
     logger = log2file(makepath(work_dir, '%s.log' % (expr_code), isfile=True))
     logger('[%s] AMASS Data Preparation Began.'%expr_code)
@@ -276,15 +240,7 @@ def main():
             }, f)
         print('Saved dataset to:', file_path)
     
-    
-            
 
     
 if __name__ == '__main__':
     main()
-
-
-# python run_mmpose_on_amass.py --exp all_with_mmpose --calib-file-h36m camera_data.pkl --actors-h36m 9 11 --room-size -1 1 -1.5 2 --operation-on validation --apply-rotation 
-# python run_mmpose_on_amass.py --exp all_with_mmpose --calib-file-h36m camera_data.pkl --actors-h36m 9 11 --room-size -1 1 -1.5 2 --operation-on train --apply-rotation
-# python run_mmpose_on_amass.py --exp all_with_mmpose --use-cams-from cmu --calib-root-cmu cmu_calibs --calibs-cmu  171204_pose5 171204_pose6 --room-size -1 1 -1 1 --operation-on validation --image-width 1920 --image-height 1080 --apply-rotation
-# python run_mmpose_on_amass.py --exp all_with_mmpose --use-cams-from cmu --calib-root-cmu cmu_calibs --calibs-cmu  171204_pose5 171204_pose6 --room-size -1 1 -1 1 --operation-on train --image-width 1920 --image-height 1080 --apply-rotation

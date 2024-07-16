@@ -13,15 +13,12 @@ from body_visualizer.tools.vis_tools import show_image
 from human_body_prior.tools.omni_tools import log2file, makepath
 from human_body_prior.tools.omni_tools import copy2cpu as c2c
 from human_body_prior.body_model.body_model import BodyModel
-from amass.data.prepare_data import prepare_amass
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 from mmpose.apis import MMPoseInferencer
 from utils import *
 from multiviews.triangulate import triangulate_poses
 
-# support_dir = '/data/Git_Repo/TransMoCap/support_data'
-support_dir = '/globalscratch/users/a/b/abolfazl/amass_data/support_data'
 
 # Choose the device to run the body model on.
 comp_device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -72,9 +69,9 @@ def parse_args():
     parser.add_argument('--exp', default='amass', type=str, help='Experiment name')
     parser.add_argument('--extra-name', default=None, type=str, help='Extra name for the experiment')
     parser.add_argument('--use-cams-from', default='h36m', type=str, help='Use cameras from',
-                        choices=['h36m', 'cmu', 'both'])
-    parser.add_argument('--calib-file-h36m', default=None, type=str, help='Camera calibration file')
-    parser.add_argument('--calib-root-cmu', default=None, type=str, help='Camera calibration file')
+                        choices=['h36m', 'cmu'])
+    parser.add_argument('--calib-path-h36m', default=None, type=str, help='Camera calibration path')
+    parser.add_argument('--calib-path-cmu', default=None, type=str, help='Camera calibration path')
     parser.add_argument('--actors-h36m', default=[1, 5, 6, 7, 8, 9, 11], nargs='+', type=int, help='Actors to use')
     parser.add_argument('--calibs-cmu', default=['171204_pose5', '171204_pose6'], nargs='+', type=str, help='Calibrations to use')
     parser.add_argument('--views-cmu', default=[3, 6, 12, 13, 23], nargs='+', type=int, help='Views to use')
@@ -91,7 +88,10 @@ def parse_args():
     parser.add_argument('--triangulate', default=False, action='store_true', help='Triangulate the mmpose keypoints')
     parser.add_argument('--triangulate-th', default=0.85, type=float, help='Triangulation threshold')
     parser.add_argument('--pose2d-model', default='human', type=str, help='2D pose model to use for mmpose')
-
+    parser.add_argument('--support-dir', default='../../amass/support_dir', type=str, help='Support directory for amass')
+    parser.add_argument('--work-dir', default='./prepared_data/', type=str, help='Work directory')
+    parser.add_argument('--amass-data-dir', default='../../amass_data_poses', type=str, help='PATH_TO_DOWNLOADED_NPZFILES/*/*_poses.npz')
+    
     return parser.parse_args()
 
 
@@ -367,33 +367,6 @@ def save_dataset(
         triangulated_3d_mmpose_all_np = None
     camera_setup_used = np.array(camera_setup_used)
     views_all = np.array(views_all)
-    # calibs_used = '_'.join([str(a) for a in calibs])
-    # if fit_mmpose_to_amass:
-    #     file_path = work_dir + '/stage_V/' + subset + '/split_{}_{}_amass_mmpose_joints_{}_{}_{}_calibs_{}_{}_fit_mmpose_to_amass_{}_{}_{}_{}.pkl'.format(
-    #         dataset_split_number,
-    #         extra_name if extra_name is not None else '',
-    #         subset, 
-    #         h36m_or_cmu, 
-    #         regressor,
-    #         calibs_used, 
-    #         'rotated' if apply_rotation else 'not_rotated', 
-    #         'joint_clip' if apply_joint_clip else 'no_joint_clip', 
-    #         'fit_using_most_aligned' if fit_using_most_aligned else 'fit_using_all',
-    #         'triangulated' if triangulate else 'not_triangulated',
-    #         'numfram_{}'.format(number_of_frames) if number_of_frames != -1 else '',
-    #         )
-    # else:
-    #     file_path = work_dir + '/stage_V/' + subset + '/split_{}_{}_amass_mmpose_joints_{}_{}_{}_calibs_{}_no_fit_{}_{}_{}.pkl'.format(
-    #         dataset_split_number,
-    #         extra_name if extra_name is not None else '',
-    #         subset, 
-    #         h36m_or_cmu, 
-    #         regressor,
-    #         calibs_used, 
-    #         'rotated' if apply_rotation else 'not_rotated', 
-    #         'triangulated' if triangulate else 'not_triangulated',
-    #         'numfram_{}'.format(number_of_frames) if number_of_frames != -1 else '',
-    #         )
 
     with open(file_path, 'wb') as f:
         pickle.dump({
@@ -420,8 +393,8 @@ def main():
 
     msg = ''' Initial use of standard AMASS dataset preparation pipeline '''
 
-    # amass_dir =  '/data/amass_data_poses/' #'PATH_TO_DOWNLOADED_NPZFILES/*/*_poses.npz'
-    amass_dir =  '/globalscratch/users/a/b/abolfazl/amass_data_poses' #'PATH_TO_DOWNLOADED_NPZFILES/*/*_poses.npz'
+    # amass_dir =  '/globalscratch/users/a/b/abolfazl/amass_data_poses' #'PATH_TO_DOWNLOADED_NPZFILES/*/*_poses.npz'
+    amass_dir = args.amass_data_dir
     
     if args.regressor == 'h36m':
         J_regressor = amass_dir + '/J_regressor_h36m.npy'
@@ -429,8 +402,8 @@ def main():
         J_regressor = amass_dir + '/J_regressor_coco.npy'
     else:
         raise ValueError('Unknown regressor: {}'.format(args.regressor))
-    # work_dir = '/data/Git_Repo/amass/support_data/prepared_data/{}/'.format(expr_code)
-    work_dir = '/globalscratch/users/a/b/abolfazl/amass_data/support_data/prepared_data/{}/'.format(expr_code)
+    
+    work_dir = os.path.join(args.work_dir, expr_code)
 
     logger = log2file(makepath(work_dir, '%s.log' % (expr_code), isfile=True))
     logger('[%s] AMASS Data Preparation Began.'%expr_code)
@@ -441,10 +414,7 @@ def main():
     logger('Train split has %d datasets.'%len(amass_splits['train']))
     logger('Train datasets: {}'.format(amass_splits['train']))
 
-    if osp.join(work_dir, 'stage_III') not in glob.glob(osp.join(work_dir, '*')):
-        prepare_amass(amass_splits, amass_dir, work_dir, logger=logger)
-
-    bm_fname = osp.join(support_dir, 'body_models/smplh/male/model.npz')
+    bm_fname = osp.join(args.support_dir, 'body_models/smplh/male/model.npz')
 
     num_betas = 16 # number of body parameters
 
@@ -453,9 +423,9 @@ def main():
     # print('faces:', faces.shape)
 
     if args.use_cams_from == 'h36m':
-        if args.calib_file_h36m is None:
+        if args.calib_path_h36m is None:
             raise ValueError('Please provide the camera calibration file for H36M')
-        cameras = load_all_cameras_h36m(args.calib_file_h36m, actors=args.actors_h36m)
+        cameras = load_all_cameras_h36m(args.calib_path_h36m, actors=args.actors_h36m)
         logger('Loaded cameras from H36M')
         n_all_cameras = len(cameras) 
         all_camera_ids = list(cameras.keys())
@@ -463,9 +433,9 @@ def main():
         views = range(1, n_all_cameras+1)
         calibs = args.actors_h36m
     elif args.use_cams_from == 'cmu':
-        if args.calib_root_cmu is None:
+        if args.calib_path_cmu is None:
             raise ValueError('Please provide the camera calibration root for CMU')
-        cameras = load_all_cameras_cmu(args.calib_root_cmu, cmu_calibs=args.calibs_cmu)
+        cameras = load_all_cameras_cmu(args.calib_path_cmu, cmu_calibs=args.calibs_cmu)
         logger('Loaded cameras from CMU')
         n_all_cameras = len(cameras) 
         all_camera_ids = list(cameras.keys())
@@ -520,9 +490,3 @@ def main():
     
 if __name__ == '__main__':
     main()
-
-
-# python run_mmpose_on_amass.py --exp all_with_mmpose --calib-file-h36m camera_data.pkl --actors-h36m 9 11 --room-size -1 1 -1.5 2 --operation-on validation --apply-rotation 
-# python run_mmpose_on_amass.py --exp all_with_mmpose --calib-file-h36m camera_data.pkl --actors-h36m 9 11 --room-size -1 1 -1.5 2 --operation-on train --apply-rotation
-# python run_mmpose_on_amass.py --exp all_with_mmpose --use-cams-from cmu --calib-root-cmu cmu_calibs --calibs-cmu  171204_pose5 171204_pose6 --room-size -1 1 -1 1 --operation-on validation --image-width 1920 --image-height 1080 --apply-rotation
-# python run_mmpose_on_amass.py --exp all_with_mmpose --use-cams-from cmu --calib-root-cmu cmu_calibs --calibs-cmu  171204_pose5 171204_pose6 --room-size -1 1 -1 1 --operation-on train --image-width 1920 --image-height 1080 --apply-rotation
