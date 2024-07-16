@@ -231,13 +231,13 @@ if __name__ == '__main__':
         os.makedirs(pkl_dir)
     pkl_dir_filtered = None
     if 'filter' in running_modes or 'mmpose' in running_modes:
-        pkl_dir_filtered = os.path.join(dir_h36m, 'PPT_data', 'datasets', '{}_filtered_{}_{}'.format(dataset_name, train_skip_step, val_skip_step))
+        pkl_dir_filtered = os.path.join(dir_h36m, 'MPL_data', 'datasets', '{}_filtered_{}_{}'.format(dataset_name, train_skip_step, val_skip_step))
         if not os.path.exists(pkl_dir_filtered):
             os.makedirs(pkl_dir_filtered)
             
     if 'mmpose' in running_modes:
         pkl_dir_filtered_base = os.path.basename(pkl_dir_filtered)
-        pkl_dir_filtered_mmpose = os.path.join(dir_h36m, 'PPT_data', 'datasets_mmpose', '{}_{}'.format(pkl_dir_filtered_base, mmpose_dataset_name))
+        pkl_dir_filtered_mmpose = os.path.join(dir_h36m, 'MPL_data', 'datasets_mmpose', '{}_{}'.format(pkl_dir_filtered_base, mmpose_dataset_name))
         if not os.path.exists(pkl_dir_filtered_mmpose):
             os.makedirs(pkl_dir_filtered_mmpose)
     

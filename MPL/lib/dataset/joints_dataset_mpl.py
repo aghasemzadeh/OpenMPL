@@ -93,6 +93,7 @@ class JointsDataset_MPL(Dataset):
         self.root = cfg.DATASET.ROOT
         self.root_2 = cfg.DATASET.ROOT_2DATSET
         self.root_3 = cfg.DATASET.ROOT_3DATSET
+        self.dir_mpl_data = cfg.DATASET.DIR_MPL_DATA
         if cfg.DATASET.ROOT_TRAIN is not None and is_train:
             self.root = cfg.DATASET.ROOT_TRAIN
         if cfg.DATASET.ROOT_TEST is not None and not is_train:

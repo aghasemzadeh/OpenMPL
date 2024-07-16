@@ -109,7 +109,7 @@ class MultiView_H36M_CMU_Panoptic_MPL(JointsDataset_MPL):
         else:
             dataset_folder_name = 'datasets_mmpose' if self.use_mmpose else 'datasets' 
             dataset_folder_name_2 = self.h36m_dataset_name + '_' + self.mmpose_type if self.use_mmpose else self.h36m_dataset_name
-            dataset_path = osp.join(self.root_2, 'h36m', 'PPT_data', dataset_folder_name, dataset_folder_name_2)
+            dataset_path = osp.join(self.root_2, 'h36m', self.dir_mpl_data, dataset_folder_name, dataset_folder_name_2)
         if cfg.DATASET.CROP:
             anno_file = osp.join(dataset_path, 'h36m_{}.pkl'.format(image_set))
         else:

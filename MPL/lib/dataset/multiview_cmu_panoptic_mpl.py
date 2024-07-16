@@ -91,38 +91,17 @@ class MultiViewCMUpanoptic_MPL(JointsDataset_MPL):
         self.cmu_dataset_name = cfg.DATASET.TRAIN_CMU_DATASET_NAME if is_train else cfg.DATASET.TEST_CMU_DATASET_NAME
         
         if self.cmu_old_datasets:
-            dataset_path = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'annot_filtered'))
+            dataset_path = osp.join(self.root, self.dir_mpl_data, self.dataset_type.replace('annot', 'annot_filtered'))
             if self.use_mmpose:
-                dataset_path = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'datasets_mmpose/annot_mmpose_filtered'))
+                dataset_path = osp.join(self.root, self.dir_mpl_data, self.dataset_type.replace('annot', 'datasets_mmpose/annot_mmpose_filtered'))
         else:
             dataset_folder_name = 'datasets_mmpose' if self.use_mmpose else 'datasets' 
             dataset_folder_name_2 = self.cmu_dataset_name + '_' + self.mmpose_type if self.use_mmpose else self.cmu_dataset_name
-            dataset_path = osp.join(self.root, 'PPT_data', dataset_folder_name, dataset_folder_name_2)
-            # dataset_folder_name_2 = dataset_folder_name_2.replace('annot', 'annot_mmpose') if self.use_mmpose else dataset_folder_name_2
+            dataset_path = osp.join(self.root, self.dir_mpl_data, dataset_folder_name, dataset_folder_name_2)
         if self.val_on_train:
-            # if self.use_mmpose:
-            #     # anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'datasets_mmpose/annot_mmpose_filtered'),
-            #     #                     'cmu_panoptic_train.pkl')
-            # else:
-            #     anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'annot_filtered_new'),
-            #                         'cmu_panoptic_train.pkl')
-            # anno_file = osp.join(self.root, 'PPT_data', dataset_folder_name, dataset_folder_name_2,
-            #                     'cmu_panoptic_train.pkl')
             anno_file = osp.join(dataset_path, 'cmu_panoptic_train.pkl')
             
         elif cfg.DATASET.CROP:
-            # if self.use_mmpose:
-            #     anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'datasets_mmpose/annot_mmpose_filtered'),
-            #                     'cmu_panoptic_{}.pkl'.format(image_set))
-            # else:
-            #     if image_set == 'train':
-            #         anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'annot_filtered_new'),
-            #                         'cmu_panoptic_train.pkl')
-            #     else:
-            #         anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'annot_filtered'),
-            #                         'cmu_panoptic_validation.pkl')
-            # anno_file = osp.join(self.root, 'PPT_data', dataset_folder_name, dataset_folder_name_2,
-            #                     'cmu_panoptic_{}.pkl'.format(image_set))
             anno_file = osp.join(dataset_path, 'cmu_panoptic_{}.pkl'.format(image_set))
         else:
             raise ValueError('Not implemented yet')
@@ -150,8 +129,7 @@ class MultiViewCMUpanoptic_MPL(JointsDataset_MPL):
             self.n_all_cameras = len(self.h36m_cameras)    
             self.all_camera_ids = list(self.h36m_cameras.keys())
             self.n_camera_setups = len(self.h36m_cameras[self.all_camera_ids[0]])
-            # self.views = self.all_camera_ids
-            # self.n_views = len(self.views)
+            
         
         if self.use_cmu_cameras_on_cmu:
             cmu_calibs = self.cmu_calibs_train if is_train else self.cmu_calibs_val

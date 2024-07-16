@@ -112,31 +112,6 @@ class MultiView_AMASS_CMU_Panoptic_MPL(JointsDataset_MPL):
         
         self.dataset_type = cfg.DATASET.DATASET_TYPE
         self.amass_dataset_type = cfg.DATASET.AMASS_DATASET_TYPE
-        # self.use_mmpose = False
-        # if cfg.DATASET.USE_MMPOSE_TRAIN and is_train:
-        #     self.use_mmpose = True
-        # elif cfg.DATASET.USE_MMPOSE_VAL and not is_train:
-        #     self.use_mmpose = True
-            
-        
-            
-        # if self.val_on_train:
-        #     if self.use_mmpose:
-        #         anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'datasets_mmpose/annot_filtered_mmpose'),
-        #                             'cmu_panoptic_train.pkl')
-        #     else:
-        #         anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'annot_filtered'),
-        #                             'cmu_panoptic_train.pkl')
-        # elif cfg.DATASET.CROP:
-        #     if self.use_mmpose:
-        #         anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'datasets_mmpose/annot_filtered_mmpose'),
-        #                         'cmu_panoptic_{}.pkl'.format(image_set))
-        #     else:
-        #         anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'annot_filtered'),
-        #                             'cmu_panoptic_{}.pkl'.format(image_set))
-        # else:
-        #     anno_file = osp.join(self.root, 'PPT_data', self.dataset_type,
-        #                         'cmu_panoptic_{}_uncrop.pkl'.format(image_set))
         
         
         cmu_calibs = self.cmu_calibs_train if is_train else self.cmu_calibs_val
@@ -465,29 +440,7 @@ class MultiView_AMASS_CMU_Panoptic_MPL(JointsDataset_MPL):
     """
     
     def getitem(self, joints_3d, camera_id, joints_3d_org=None, camera_setup_to_use=0, idx=None):
-
-        # ==================================== Image ====================================
-        # image_dir = 'images.zip@' if self.data_format == 'zip' else ''
-        # if db_rec['source'] == 'cmu_panoptic':
-        #     image_file = osp.join(self.root_h36m, image_dir,
-        #                       db_rec['image'])
-        # else:    
-        #     image_file = osp.join(self.root_h36m, db_rec['source'], image_dir, 'images',
-        #                         db_rec['image'])
-        # # print('image_file', image_file)
-        # if self.data_format == 'zip':
-        #     from utils import zipreader
-        #     data_numpy = zipreader.imread(
-        #         image_file, cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
-        # else:
-        #     data_numpy = cv2.imread(
-        #         image_file, cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
         
-
-        # if db_rec['source'] == 'cmu_panoptic':
-        #     pass
-        # else:        
-        #     data_numpy = data_numpy[:1000]                  # According to ET
 
         # ==================================== Label ====================================
         

@@ -17,6 +17,7 @@ DATASET:
   ROOT_2DATSET: '/globalscratch/ucl/elen/abolfazl/amass'
   AMASS_DATASET_TYPE: 'all_with_mmpose_h36m_actual_size_mmpose_hrnet_amass_mmpose_joints_h36m_calibs_9_11_no_fit_rotated_not_triangulated'
   ROOT: '/globalscratch/users/a/b/abolfazl/Human36m/H36M-Toolbox'
+  # DIR_MPL_DATA: 'PPT_data'
   TRAIN_USE_H36M_OLD_DATASETS: false
   TEST_USE_H36M_OLD_DATASETS: false
   TRAIN_H36M_DATASET_NAME: annot_filtered_5_64

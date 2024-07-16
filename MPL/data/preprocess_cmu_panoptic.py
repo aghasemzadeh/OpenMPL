@@ -11,35 +11,6 @@ import argparse
 # for detecting the bbox of humans
 # from mmdet.apis import DetInferencer
 
-# dir_cmu_panoptic = '/globalscratch/users/a/b/abolfazl/panoptic-toolbox'
-
-# categories_to_use = [
-#     '171026_pose1',
-#     '171026_pose2',
-#     '171026_pose3',
-#     '171204_pose1',
-#     '171204_pose2',
-#     '171204_pose3',
-#     '171204_pose4',
-#     '171204_pose5',
-#     '171204_pose6',
-# ]
-
-# training_categories = [
-#     '171026_pose1',
-#     '171026_pose2',
-#     '171026_pose3',
-#     '171204_pose1',
-#     '171204_pose2',
-#     '171204_pose3',
-# ]
-
-# val_categories = [
-#     '171204_pose4',
-#     '171204_pose5',
-#     '171204_pose6',
-# ]
-
 
 ## to be in line with SOTA
 training_categories = [
@@ -626,7 +597,7 @@ if __name__ == '__main__':
     print('running on dataset: {}'.format(dataset_name))
     print('keypoints standard: {}'.format(keypoints_standard))
     
-    pkl_dir = os.path.join(dir_cmu_panoptic, 'PPT_data', 'datasets', dataset_name)
+    pkl_dir = os.path.join(dir_cmu_panoptic, 'MPL_data', 'datasets', dataset_name)
     if not os.path.exists(pkl_dir):
         os.makedirs(pkl_dir, exist_ok=True)
     pkl_dir_filtered = None
@@ -637,7 +608,7 @@ if __name__ == '__main__':
             
     if 'mmpose' in running_modes:
         pkl_dir_filtered_base = os.path.basename(pkl_dir_filtered)
-        pkl_dir_filtered_mmpose = os.path.join(dir_cmu_panoptic, 'PPT_data', 'datasets_mmpose', '{}_{}'.format(pkl_dir_filtered_base, mmpose_dataset_name))
+        pkl_dir_filtered_mmpose = os.path.join(dir_cmu_panoptic, 'MPL_data', 'datasets_mmpose', '{}_{}'.format(pkl_dir_filtered_base, mmpose_dataset_name))
         if not os.path.exists(pkl_dir_filtered_mmpose):
             os.makedirs(pkl_dir_filtered_mmpose, exist_ok=True)
     

@@ -81,11 +81,11 @@ class MultiView_CMU_Panoptic_H36M_MPL(JointsDataset_MPL):
         # self.mmpose_type = cfg.DATASET.TRAIN_MMPOSE_TYPE if is_train else cfg.DATASET.TEST_MMPOSE_TYPE
         
         if self.cmu_old_datasets:
-            dataset_path = osp.join(self.root_2, 'PPT_data', self.dataset_type.replace('annot', 'annot_filtered'))
+            dataset_path = osp.join(self.root_2, self.dir_mpl_data, self.dataset_type.replace('annot', 'annot_filtered'))
         else:
             dataset_folder_name = 'datasets' 
             dataset_folder_name_2 = self.cmu_dataset_name
-            dataset_path = osp.join(self.root_2, 'PPT_data', dataset_folder_name, dataset_folder_name_2)
+            dataset_path = osp.join(self.root_2, self.dir_mpl_data, dataset_folder_name, dataset_folder_name_2)
         if self.val_on_train:
             anno_file = osp.join(dataset_path, 'cmu_panoptic_train.pkl')
             

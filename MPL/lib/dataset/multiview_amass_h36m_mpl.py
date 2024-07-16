@@ -84,29 +84,6 @@ class MultiView_AMASS_H36M_MPL(JointsDataset_MPL):
         
         self.dataset_type = cfg.DATASET.DATASET_TYPE
         self.amass_dataset_type = cfg.DATASET.AMASS_DATASET_TYPE
-        # self.use_mmpose = False
-        # if cfg.DATASET.USE_MMPOSE_TRAIN and is_train:
-        #     self.use_mmpose = True
-        # elif cfg.DATASET.USE_MMPOSE_VAL and not is_train:
-        #     self.use_mmpose = True
-            
-        # if self.val_on_train:
-        #     if self.use_mmpose:
-        #         anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'annot_filtered_mmpose'),
-        #                             'cmu_panoptic_train.pkl')
-        #     else:
-        #         anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'annot_filtered'),
-        #                             'cmu_panoptic_train.pkl')
-        # elif cfg.DATASET.CROP:
-        #     if self.use_mmpose:
-        #         anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'annot_filtered_mmpose'),
-        #                         'cmu_panoptic_{}.pkl'.format(image_set))
-        #     else:
-        #         anno_file = osp.join(self.root, 'PPT_data', self.dataset_type.replace('annot', 'annot_filtered'),
-        #                             'cmu_panoptic_{}.pkl'.format(image_set))
-        # else:
-        #     anno_file = osp.join(self.root, 'PPT_data', self.dataset_type,
-        #                         'cmu_panoptic_{}_uncrop.pkl'.format(image_set))
         
 
         # self.h36m_room_center = np.array([ 0.06684173, -0.43425486,  5.12188722])   # (x, y, z) in world coordinate (h36m) for amass it will be (x, z, y)

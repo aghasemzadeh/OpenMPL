@@ -8,6 +8,7 @@ DATASET:
   CLIP_JOINTS: true
   CMU_KEYPOINT_STANDARD: coco
   DATASET_TYPE: annot_different_scene_same_cams
+  # DIR_MPL_DATA: 'PPT_data'
   DATA_FORMAT: jpg
   EPIPOLAR_ERROR_ACCEPTANCE_THRESHOLD:
   - 0.1

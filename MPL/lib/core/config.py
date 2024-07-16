@@ -118,6 +118,7 @@ config.DATASET.ROOT_2DATSET = '../data/h36m/'
 config.DATASET.ROOT_3DATSET = '../data/h36m/'
 config.DATASET.ROOT_TRAIN = None
 config.DATASET.ROOT_TEST = None
+config.DATASET.DIR_MPL_DATA = 'MPL_data'
 config.DATASET.TRAIN_DATASET = 'mixed_dataset'
 config.DATASET.TEST_DATASET = 'multi_view_h36m'
 config.DATASET.TRAIN_SUBSET = 'train'
