@@ -279,8 +279,8 @@ def main():
                 wandb_name = args.cfg.split('/')[-1].replace('.yaml', '')
         wandb.init(
             id=wandb_id,
-            project="ppt",
-            entity="saghasemzadeh",
+            project=config.WANDB_PROJECT,
+            entity=config.WANDB_ENTITY,
             config=config,
             resume="allow",
             name=wandb_name,
