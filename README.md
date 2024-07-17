@@ -31,6 +31,8 @@ To get started with OpenMPL, follow these steps:
 
 3. **Datasets Setup:**
 
+    You will need AMASS dataset for training (+ camera calibrations from your test dataset) and a dataset for testing in MPL. We test our framework on two datasets: CMU and Human3.6M.
+
     #### CMU
 
     For CMU data, please follow [panoptic-toolbox](https://github.com/CMU-Perceptual-Computing-Lab/panoptic-toolbox) to prepare images and annotations.
@@ -53,10 +55,22 @@ To get started with OpenMPL, follow these steps:
 
     #### AMASS
 
-    For running MHP (generating 3D dataset for MPL), you need to download the amass dataset. Please follow [AMASS](https://amass.is.tue.mpg.de/index.html) for downloading the pose SMPL data.
+    For running MHP (generating 3D dataset for MPL), you need to download the amass dataset. Please follow [AMASS](https://amass.is.tue.mpg.de/index.html) for downloading the pose SMPL data. For running MHP, you will need to install [amass](https://github.com/nghorbani/amass) framework and follow their guidelines.
 
+    After correcting the paths, you can run the command below:
 
-    You can change your prefered configurations in the sh file
+    ```bash
+    cd MPH
+    sh run_mmpose_00_cmu_calibs.sh      # for CMU
+    sh run_mmpose_00_h36m_calibs.sh     # for Human3.6M
+    ```
+
+    Remember to go through the code in these files to be sure you run everything. There are some parallel scripts that you need to take care yourself. (Some are commented)
+
+## Acknowledgement
+
+Part of our code is borrowed from [PPT](https://github.com/HowieMa/PPT/tree/main) and [PoseFormer](https://github.com/zczcwh/PoseFormer/tree/main). We thank the authors for releasing the codes.
+    
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
