@@ -1,6 +1,6 @@
 # OpenMPL
 
-[![arXiv](https://img.shields.io/badge/arXiv-2407.18112-<COLOR>.svg)](https://arxiv.org/abs/2408.10805)
+[![arXiv](https://img.shields.io/badge/arXiv-2408.10805-<COLOR>.svg)](https://arxiv.org/abs/2408.10805)
 >**[MPL: Lifting 3D Human Pose from Multi-view 2D Poses, T-CAP ECCV24](https://arxiv.org/abs/2408.10805)**
 >
 >Seyed Abolfazl Ghasemzadeh, Alexandre Alahi, Christophe De Vleeschouwer
