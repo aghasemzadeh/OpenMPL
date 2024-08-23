@@ -75,6 +75,24 @@ To get started with OpenMPL, follow these steps:
 
     Remember to go through the code in these files to be sure you run everything. There are some parallel scripts that you need to take care yourself. (Some are commented)
 
+## Citation
+
+Please make sure to cite our paper if you utilize our code.
+
+```
+@ARTICLE{Ghasemzadeh2024-ln,
+  title         = "{MPL}: Lifting {3D} Human Pose from Multi-view {2D} Poses",
+  author        = "Ghasemzadeh, Seyed Abolfazl and Alahi, Alexandre and De
+                   Vleeschouwer, Christophe",
+  month         =  aug,
+  year          =  2024,
+  copyright     = "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+  archivePrefix = "arXiv",
+  primaryClass  = "cs.CV",
+  eprint        = "2408.10805"
+}
+```
+
 ## Acknowledgement
 
 Part of our code is borrowed from [PPT](https://github.com/HowieMa/PPT/tree/main) and [PoseFormer](https://github.com/zczcwh/PoseFormer/tree/main). We thank the authors for releasing the codes.
