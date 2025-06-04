@@ -12,3 +12,5 @@ test*.png
 test_imgs/
 
 plotly_figure_fig*.html
+
+*.png

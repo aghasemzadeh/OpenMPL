@@ -11,6 +11,9 @@ import glob
 import torch
 import json
 import copy
+import cv2
+import xml.etree.ElementTree as ET
+
 
 def cam_to_image(point_cam, K):
     # takes batches of points and converts them to image 2D coordinates
@@ -115,14 +118,101 @@ def load_all_cameras_cmu(calib_root, cmu_calibs):
             cameras_all_calibs[cam_id].append(cam)
     return cameras_all_calibs
 
-# def load_all_20_cameras():
-#     calib_file = 'cameras_20.json'
-#     with open(calib_file, 'r') as f:
-#         calibration_cat = json.load(f)
-#     cameras = {i:cam for i, cam in enumerate(calibration_cat['cameras'])}
-#     for cam_id, cam in cameras.items():
-#         cam[]
+def extract_from_xml(file_path):
+    # Parse the XML file using ElementTree and get the root element
+    tree = ET.parse(file_path)
+    root = tree.getroot()
 
+    # Find the 'Intrinsics' element in the XML and extract the 'data' text
+    intrinsics = root.find('Intrinsics')
+    data_text = intrinsics.find('data').text
+    # Split the text into lines and convert each line into a list of floats
+    K = np.array([list(map(float, line.split())) for line in data_text.strip().split('\n')])
+
+    # Find the 'CameraMatrix' element in the XML and extract the 'data' text
+    extrinsics = root.find('CameraMatrix')
+    data_text = extrinsics.find('data').text
+
+    # Split the text into lines and convert each line into a list of floats
+    camera_pose = np.array([list(map(float, line.split())) for line in data_text.strip().split('\n')])
+
+    #Imae size
+    image_width = int(root.find('image_width').text)
+    image_height = int(root.find('image_height').text)
+    image_size = (image_width, image_height)
+    
+    return K, camera_pose, image_size
+
+def load_all_cameras_openmplposer(calib_root):
+    """
+    loads all cameras from the root directory and returns a dictionary
+    containing the camera parameters for each camera is in a xml file
+    """
+    def parse_matrix(node):
+        rows = int(node.find('rows').text)
+        cols = int(node.find('cols').text)
+        data_text = node.find('data').text.strip().replace('\n', ' ')
+        data = list(map(float, data_text.split()))
+        return np.array(data).reshape((rows, cols))
+    
+    cams = range(1, 4)
+    distCoef =  [-0.287016,0.182978,1.91352e-06,0.000618877,-0.0471994] # from cmu panoptic
+    cameras_all_calibs = {cam_id: [] for cam_id in cams}
+    xml_files = glob.glob(osp.join(calib_root, '*.xml'))
+    for xml_file in xml_files:
+
+        # Parse the XML
+        tree = ET.parse(xml_file)
+        root = tree.getroot()
+
+        K = parse_matrix(root.find('Intrinsics'))
+        P = parse_matrix(root.find('CameraMatrix'))
+
+        # K = np.linalg.inv(K)
+
+        fx = K[0, 0]
+        fy = K[1, 1]
+        cx = K[0, 2]
+        cy = K[1, 2]
+
+        R = P[:, :3]
+        T = P[:, 3:]
+
+        R = R.T
+
+        F = np.diag([-1, 1, 1])
+        R = R.copy()
+        # # t = t.copy()
+        R = F @ R
+        # t = -np.linalg.inv(R.T) @ T
+        # t = F @ t
+        # T = -R.T @ t
+
+        K_, camera_pose, _ = extract_from_xml(xml_file)
+        camera_pose = np.vstack((camera_pose, [0, 0, 0, 1]))
+
+        k = np.array([distCoef[0], distCoef[1], distCoef[4]])
+        p = np.array([distCoef[2], distCoef[3]])
+
+        camera_dict = {
+            'camera_setup': 0,
+            'camera_id': int(xml_file.split('/')[-1].split('_')[-1].replace('.xml', '')),
+            'K': np.array(K),
+            'fx': fx,
+            'fy': fy,
+            'cx': cx,
+            'cy': cy,
+            'k': k,
+            'p': p,
+            'R': np.array(R),
+            'T': np.array(T),
+            't': -np.linalg.inv(R.T) @ T,
+            'K_': np.array(K_),
+            'camera_pose': camera_pose,
+        }
+        cameras_all_calibs[camera_dict['camera_id']].append(camera_dict)
+
+    return cameras_all_calibs
 
 MMPOSE2H36M = {
     1: 12,  # rhip

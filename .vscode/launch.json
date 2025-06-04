@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "train openmplposer run_mmpose_on_amass.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "MHP/run_mmpose_02_run.py",
+            "console": "integratedTerminal",
+            // "args": ["--dataset-split-number", "0", "--exp", "all_with_mmpose", "--extra-name", "hrnet_testing", "--use-cams-from", "openmplposer", "--calib-path-openmplposer", "/globalscratch/users/a/b/abolfazl/OpenMPLPoser_files/cameras", "--room-size", "-3.89", "3.89", "-3.5", "3.5", "0", "0", "--operation-on", "train", "--image-width", "1280", "--image-height", "720", "--apply-rotation", "--regressor", "coco", "--triangulate", "--triangulate-th", "0.9", "--pose2d-model", "td-hm_hrnet-w32_8xb64-210e_coco-384x288", "--support-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data", "--work-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data/prepared_data", "--amass-data-dir", "/globalscratch/users/a/b/abolfazl/amass_data_poses"]
+            "args": ["--dataset-split-number", "0", "--exp", "all_with_mmpose", "--extra-name", "hrnet_testing", "--use-cams-from", "openmplposer", "--calib-path-openmplposer", "/globalscratch/users/a/b/abolfazl/OpenMPLPoser_files/cameras", "--room-size", "0", "0", "0", "0", "0", "0", "--operation-on", "train", "--image-width", "1280", "--image-height", "720", "--apply-rotation", "--regressor", "coco", "--triangulate", "--triangulate-th", "0.9", "--pose2d-model", "td-hm_hrnet-w32_8xb64-210e_coco-384x288", "--support-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data", "--work-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data/prepared_data", "--amass-data-dir", "/globalscratch/users/a/b/abolfazl/amass_data_poses"]
+        },
+        {
+            "name": "train h36m run_mmpose_on_amass.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "MHP/run_mmpose_02_run.py",
+            "console": "integratedTerminal",
+            // "args": ["--dataset-split-number", "0", "--exp", "all_with_mmpose", "--extra-name", "hrnet_testing", "--use-cams-from", "openmplposer", "--calib-path-openmplposer", "/globalscratch/users/a/b/abolfazl/OpenMPLPoser_files/cameras", "--room-size", "-3.89", "3.89", "-3.5", "3.5", "0", "0", "--operation-on", "train", "--image-width", "1280", "--image-height", "720", "--apply-rotation", "--regressor", "coco", "--triangulate", "--triangulate-th", "0.9", "--pose2d-model", "td-hm_hrnet-w32_8xb64-210e_coco-384x288", "--support-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data", "--work-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data/prepared_data", "--amass-data-dir", "/globalscratch/users/a/b/abolfazl/amass_data_poses"]
+            "args": ["--dataset-split-number", "0", "--exp", "all_with_mmpose", "--extra-name", "hrnet_testing", "--use-cams-from", "h36m", "--calib-path-h36m", "/globalscratch/users/a/b/abolfazl/Human36m/H36M-Toolbox", "--room-size", "0", "0", "0", "0", "0", "0", "--operation-on", "train", "--image-width", "1000", "--image-height", "1000", "--apply-rotation", "--regressor", "h36m", "--triangulate", "--triangulate-th", "0.9", "--pose2d-model", "td-hm_hrnet-w32_8xb64-210e_coco-384x288", "--support-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data", "--work-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data/prepared_data", "--amass-data-dir", "/globalscratch/users/a/b/abolfazl/amass_data_poses"]
+        },
+    ]
+}

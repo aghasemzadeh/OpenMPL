@@ -69,9 +69,10 @@ def parse_args():
     parser.add_argument('--exp', default='amass', type=str, help='Experiment name')
     parser.add_argument('--extra-name', default=None, type=str, help='Extra name for the experiment')
     parser.add_argument('--use-cams-from', default='h36m', type=str, help='Use cameras from',
-                        choices=['h36m', 'cmu'])
+                        choices=['h36m', 'cmu', 'openmplposer'])
     parser.add_argument('--calib-path-h36m', default=None, type=str, help='Camera calibration path')
     parser.add_argument('--calib-path-cmu', default=None, type=str, help='Camera calibration path')
+    parser.add_argument('--calib-path-openmplposer', default=None, type=str, help='Camera calibration path')
     parser.add_argument('--actors-h36m', default=[1, 5, 6, 7, 8, 9, 11], nargs='+', type=int, help='Actors to use')
     parser.add_argument('--calibs-cmu', default=['171204_pose5', '171204_pose6'], nargs='+', type=str, help='Calibrations to use')
     parser.add_argument('--views-cmu', default=[3, 6, 12, 13, 23], nargs='+', type=int, help='Views to use')
@@ -275,6 +276,15 @@ def save_dataset(
                 cy = cameras[view][camera_setup]['cy']
                 mv = MeshViewer(width=imw, height=imh, use_offscreen=True, fx=fx, fy=fy, cx=cx, cy=cy)
                 mv.set_cam_trans(trans=[0, 0, 0])
+                if h36m_or_cmu == 'openmplposer':
+                    camera_pose = cameras[view][camera_setup]['camera_pose']
+                    K_ = cameras[view][camera_setup]['K_']
+                    # mv.updateCam(camera_pose, K_)
+                    mv.camera_node.camera.fx = K_[0, 0]
+                    mv.camera_node.camera.fy = K_[1, 1]
+                    mv.camera_node.camera.cx = K_[0, 2]
+                    mv.camera_node.camera.cy = K_[1, 2]
+                    mv.scene.set_pose(mv.camera_node, pose=camera_pose)
                 mesh_viewers[-1].append(mv)
         # pass
     # mmpose_inferencer = MMPoseInferencer('human', device='cuda:0')
@@ -316,6 +326,8 @@ def save_dataset(
             Rt[:3, 3] = -t.T
             Rt[0, :] = -Rt[0, :]        # flip x axis
             vertices_transformed = np.dot(vertices, Rt[:3, :3].T) + Rt[:3, 3]
+            if h36m_or_cmu == 'openmplposer':
+                vertices_transformed = vertices
             body_mesh = trimesh.Trimesh(vertices=vertices_transformed, faces=faces, vertex_colors=np.tile(colors['grey'], (6890, 1)))
             mv.set_static_meshes([body_mesh])
             # try:
@@ -442,6 +454,16 @@ def main():
         n_camera_setups = len(cameras[all_camera_ids[0]])
         views = args.views_cmu
         calibs = args.calibs_cmu
+    elif args.use_cams_from == 'openmplposer':
+        if args.calib_path_openmplposer is None:
+            raise ValueError('Please provide the camera calibration root for OpenMPLPoser')
+        cameras = load_all_cameras_openmplposer(args.calib_path_openmplposer)
+        logger('Loaded cameras from OpenMPLPoser')
+        n_all_cameras = len(cameras) 
+        all_camera_ids = list(cameras.keys())
+        n_camera_setups = len(cameras[all_camera_ids[0]])
+        views = range(1, n_all_cameras+1)
+        calibs = ['openmplposer']
     
     print('Views:', views)
     
