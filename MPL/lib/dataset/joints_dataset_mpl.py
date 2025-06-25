@@ -69,6 +69,10 @@ class JointsDataset_MPL(Dataset):
             self.filter_groupings = cfg.DATASET.FILTER_GROUPINGS and cfg.DATASET.TRAIN_FILTER_GROUPINGS
         else:
             self.filter_groupings = cfg.DATASET.FILTER_GROUPINGS and cfg.DATASET.TEST_FILTER_GROUPINGS
+
+        
+        self.kp_visiblity_th = cfg.DATASET.KP_VISIBILITY_TH
+        self.zero_tokens_for_missing_joints = cfg.DATASET.ZERO_TOKENS_FOR_MISSING_JOINTS
         
             
         self.use_3d_triangulated_mmpose = cfg.DATASET.MIX_3D_AMASS_WITH_TRIANGULATED_MMPOSE_TRAIN if is_train else cfg.DATASET.USE_3D_TRIANGULATED_MMPOSE_TEST

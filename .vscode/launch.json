@@ -22,5 +22,31 @@
             // "args": ["--dataset-split-number", "0", "--exp", "all_with_mmpose", "--extra-name", "hrnet_testing", "--use-cams-from", "openmplposer", "--calib-path-openmplposer", "/globalscratch/users/a/b/abolfazl/OpenMPLPoser_files/cameras", "--room-size", "-3.89", "3.89", "-3.5", "3.5", "0", "0", "--operation-on", "train", "--image-width", "1280", "--image-height", "720", "--apply-rotation", "--regressor", "coco", "--triangulate", "--triangulate-th", "0.9", "--pose2d-model", "td-hm_hrnet-w32_8xb64-210e_coco-384x288", "--support-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data", "--work-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data/prepared_data", "--amass-data-dir", "/globalscratch/users/a/b/abolfazl/amass_data_poses"]
             "args": ["--dataset-split-number", "0", "--exp", "all_with_mmpose", "--extra-name", "hrnet_testing", "--use-cams-from", "h36m", "--calib-path-h36m", "/globalscratch/users/a/b/abolfazl/Human36m/H36M-Toolbox", "--room-size", "0", "0", "0", "0", "0", "0", "--operation-on", "train", "--image-width", "1000", "--image-height", "1000", "--apply-rotation", "--regressor", "h36m", "--triangulate", "--triangulate-th", "0.9", "--pose2d-model", "td-hm_hrnet-w32_8xb64-210e_coco-384x288", "--support-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data", "--work-dir", "/globalscratch/users/a/b/abolfazl/amass_data/support_data/prepared_data", "--amass-data-dir", "/globalscratch/users/a/b/abolfazl/amass_data_poses"]
         },
+        {
+            "name": "train mpl train_mpl.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "MPL/run/train_mpl.py",
+            "console": "integratedTerminal",
+            // "args": ["--cfg", "/home/ucl/elen/abolfazl/OpenMPL/MPL/configs/openmplposer/mpl_amass/mpl_0_amass_mmpose_hrnet_MultiSPT_FPT_Conf3rd_ConfFPTNo_Raytoken_Learn3dEnc_Add3dEncRays_2views_Seed0.yaml"]
+            "args": ["--cfg", "/home/ucl/elen/abolfazl/OpenMPL/MPL/configs/openmplposer/mpl_amass/mpl_2_amass_mmpose_hrnet_MultiSPT_FPT_Conf3rd_ConfFPTNo_Raytoken_Learn3dEnc_Add3dEncRays_2views_Seed0_ZrTkn.yaml"]
+        },
+
+        {
+            "name": "infer mpl train_mpl.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "MPL/run/inference_mpl.py",
+            "console": "integratedTerminal",
+            // "args": ["--cfg", "/home/ucl/elen/abolfazl/OpenMPL/MPL/configs/openmplposer/mpl_amass/mpl_0_amass_mmpose_hrnet_MultiSPT_FPT_Conf3rd_ConfFPTNo_Raytoken_Learn3dEnc_Add3dEncRays_2views_Seed0.yaml", 
+            // "args": ["--cfg", "/home/ucl/elen/abolfazl/OpenMPL/MPL/configs/openmplposer/mpl_amass/mpl_1_amass_mmpose_hrnet_MultiSPT_FPT_Conf3rd_ConfFPTNo_Raytoken_Learn3dEnc_Add3dEncRays_2views_Seed0.yaml", 
+            "args": ["--cfg", "/home/ucl/elen/abolfazl/OpenMPL/MPL/configs/openmplposer/mpl_amass/mpl_2_amass_mmpose_hrnet_MultiSPT_FPT_Conf3rd_ConfFPTNo_Raytoken_Learn3dEnc_Add3dEncRays_2views_Seed0_ZrTkn.yaml", 
+                "--data-dir", "/globalscratch/users/a/b/abolfazl/OpenMPLPoser_files/data/keypoints/yolov8n-pose_protocol_1/MPI_HDM05/test/1.pkl",
+                "--data-out-dir", "/globalscratch/users/a/b/abolfazl/OpenMPLPoser_files/data/keypoints_3d/yolov8n-pose_protocol_1/MPI_HDM05/test/",
+                "--cameras-path", "/globalscratch/users/a/b/abolfazl/OpenMPLPoser_files/cameras",
+                "--workers", "0",
+                // "--batch-size", "1",
+        ]
+        },
     ]
 }

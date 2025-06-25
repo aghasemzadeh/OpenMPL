@@ -803,3 +803,78 @@ class AverageMeter(object):
         self.count += n
         self.avg = self.sum / self.count
 
+
+
+def inference(config,
+             loader,
+             dataset,
+             model,
+             output_dir,):
+
+    model.eval()
+    batch_time = AverageMeter()
+    inference_time = AverageMeter()
+
+    n_view = 6 if config.DATASET.TEST_DATASET == 'multiview_skipose' else 4
+    n_view = 5 if config.DATASET.TEST_DATASET.startswith('multiview_cmu_panoptic') else n_view
+    n_view = len(config.DATASET.TEST_VIEWS) if config.DATASET.TEST_VIEWS is not None else n_view
+    nsamples = len(dataset)
+
+    njoints = config.NETWORK.NUM_JOINTS                 # 17
+    all_preds = np.zeros((nsamples, njoints, 3), dtype=np.float32)      # (#sample, 17, 3)
+
+
+    idx = 0
+    with torch.no_grad():
+        end = time.time()
+        
+        for i, (input, target, weight, meta) in enumerate(loader):
+            # input:    list, length:4, (bs, 3, 256, 256)       4 views
+            # target:   list, length:4, (bs, 17, 64, 64)        4 views
+            # weight:   list, length:4, (bs, 17, 1)             4 views
+
+            # ======================== combinations of input ========================
+            batch_size = input[0].shape[0]
+            
+
+            rays = [meta[j]['rays'].float()  for j in range(len(input))  ] 
+            centers = [meta[j]['cam_center'].float() for j in range(len(input))]
+            start_inference = time.time()
+            if config.NETWORK.TRANSFORMER_OUTPUT_HEAD_KADKHOD:
+                output, x_intermediate = model(input, centers=centers, rays=rays)
+            else:
+                output = model(input, centers=centers, rays=rays)
+            inference_time.update(time.time() - start_inference)
+            
+            batch_time.update(time.time() - end)
+            end = time.time()
+
+            # ======================== Save prediction (heatmap + coords.) ========================
+            preds = np.zeros((batch_size, njoints, 3), dtype=np.float32)     # (bs * #view, 17, 3)
+
+            preds = output.clone().cpu().numpy()
+            if 'room_scaled' in meta[0]:
+                if 'room_scaled_equal' in meta[0]:
+                    room_scale = meta[0]['room_x_scale'][0].item()
+                    room_center = meta[0]['room_center'][0].clone().cpu().numpy()
+                    preds = preds * room_scale + room_center
+                else:
+                    room_x_scale = meta[0]['room_x_scale'][0].item()
+                    room_y_scale = meta[0]['room_y_scale'][0].item()
+                    preds[:, :, 0] = preds[:, :, 0] * room_x_scale
+                    preds[:, :, 1] = preds[:, :, 1] * room_y_scale
+            all_preds[idx:idx + batch_size] = preds                      # (bs * #view, 17, 3) in original image
+            idx += batch_size
+
+            # # ======================== Log ========================
+            if i % config.PRINT_FREQ == 0:
+            # if True:
+                msg = 'Test: [{0}/{1}]\t' \
+                      'Time {batch_time.val:.3f} ({batch_time.avg:.3f})'.format(
+                          i, len(loader), batch_time=batch_time)
+                logger.info(msg)
+
+    np.savez(output_dir, points3d=all_preds)
+    logger.info('Saved 3D points to {}'.format(output_dir))
+
+    return 

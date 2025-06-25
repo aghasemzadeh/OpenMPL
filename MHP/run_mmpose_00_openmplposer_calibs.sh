@@ -126,6 +126,6 @@ calib_path=/globalscratch/users/a/b/abolfazl/OpenMPLPoser_files/cameras # path t
 
 # to combine all the results
 python run_mmpose_04_combine.py --exp all_with_mmpose --work-dir $work_dir --extra-name hrnet --operation-on train
-# python run_mmpose_04_combine.py --exp all_with_mmpose --work-dir $work_dir --extra-name hrnet --operation-on validation
+python run_mmpose_04_combine.py --exp all_with_mmpose --work-dir $work_dir --extra-name hrnet --operation-on validation
 
 echo "All done"
