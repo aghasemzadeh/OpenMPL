@@ -1,5 +1,11 @@
 # OpenMPL
 
+> [!IMPORTANT]
+> ### 🚀 **New Version Available!** 🚀
+> 🌟 A more recent and improved version of this project is now maintained at:
+> 👉 [**OpenRUMPL**](https://github.com/aghasemzadeh/OpenRUMPL) 👈
+> ✨ *Switch to the new repository for the latest updates and features!* ✨
+
 [![arXiv](https://img.shields.io/badge/arXiv-2408.10805-<COLOR>.svg)](https://arxiv.org/abs/2408.10805)
 >**[MPL: Lifting 3D Human Pose from Multi-view 2D Poses, T-CAP ECCV24](https://arxiv.org/abs/2408.10805)**
 >
@@ -79,6 +85,7 @@ To get started with OpenMPL, follow these steps:
 
 Please make sure to cite our paper if you utilize our code.
 
+
 ```
 @ARTICLE{Ghasemzadeh2024-ln,
   title         = "{MPL}: Lifting {3D} Human Pose from Multi-view {2D} Poses",
@@ -99,7 +106,7 @@ Part of our code is borrowed from [PPT](https://github.com/HowieMa/PPT/tree/main
     
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under **UCLouvain ownership**. See the [LICENSE](LICENSE) file for full details.
 
 ---
 
